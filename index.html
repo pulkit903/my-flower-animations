@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Line to Flower Animation</title>
+<style>
+  body {
+    background: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 100px 20px;
+  }
+  #lineText, #changeText {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+  #flowerContainer {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 40px auto;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .petal {
+    width: 50px;
+    height: 90px;
+    border-radius: 50% / 60%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    opacity: 0;
+    transition: background-color 2s ease;
+  }
+  .petal:nth-child(1) { transform: rotate(0deg) translateY(-55px); }
+  .petal:nth-child(2) { transform: rotate(45deg) translateY(-55px); }
+  .petal:nth-child(3) { transform: rotate(90deg) translateY(-55px); }
+  .petal:nth-child(4) { transform: rotate(135deg) translateY(-55px); }
+  .petal:nth-child(5) { transform: rotate(180deg) translateY(-55px); }
+  .petal:nth-child(6) { transform: rotate(225deg) translateY(-55px); }
+  .petal:nth-child(7) { transform: rotate(270deg) translateY(-55px); }
+  .petal:nth-child(8) { transform: rotate(315deg) translateY(-55px); }
+
+  #center {
+    width: 60px;
+    height: 60px;
+    background: orange;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px #FFA500;
+  }
+
+  /* Cinematic text animation */
+  #changeText {
+    margin-top: 30px;
+    color: #FF4500;
+    font-weight: 700;
+    transform: translateY(30px);
+    transition: opacity 2s ease, transform 2s ease;
+  }
+</style>
+</head>
+<body>
+
+<div id="lineText">A line to come</div>
+
+<div id="flowerContainer">
+  <div class="petal" id="petal1"></div>
+  <div class="petal" id="petal2"></div>
+  <div class="petal" id="petal3"></div>
+  <div class="petal" id="petal4"></div>
+  <div class="petal" id="petal5"></div>
+  <div class="petal" id="petal6"></div>
+  <div class="petal" id="petal7"></div>
+  <div class="petal" id="petal8"></div>
+  <div id="center"></div>
+</div>
+
+<div id="changeText">Change is coming</div>
+
+<script>
+  const lineText = document.getElementById('lineText');
+  const flowerContainer = document.getElementById('flowerContainer');
+  const petals = [
+    document.getElementById('petal1'),
+    document.getElementById('petal2'),
+    document.getElementById('petal3'),
+    document.getElementById('petal4'),
+    document.getElementById('petal5'),
+    document.getElementById('petal6'),
+    document.getElementById('petal7'),
+    document.getElementById('petal8'),
+  ];
+  const center = document.getElementById('center');
+  const changeText = document.getElementById('changeText');
+
+  // Step 1: Show the line text
+  lineText.style.opacity = 1;
+
+  // Colors for petals (cycling orange, purple, blue)
+  const colors = ['orange', 'purple', 'blue', 'orange', 'purple', 'blue', 'orange', 'purple'];
+
+  // Show petals one by one with colors, then turn all orange
+  function showPetalsSequentially(index = 0) {
+    if (index >= petals.length) {
+      // After all petals shown, change all to orange after a delay
+      setTimeout(() => {
+        petals.forEach(petal => petal.style.backgroundColor = 'orange');
+        center.style.backgroundColor = 'orange';
+        // Show "Change is coming" text with cinematic effect
+        showChangeText();
+      }, 1500);
+      return;
+    }
+    // Set color and show current petal
+    petals[index].style.backgroundColor = colors[index];
+    petals[index].style.opacity = 1;
+    // Hide the lineText gradually during petals appear
+    lineText.style.opacity = Math.max(0, 1 - (index + 1) * 0.15);
+
+    // Fade out line text fully after 4 petals appear
+    if (index === 3) {
+      lineText.style.opacity = 0;
+    }
+
+    // Show flower container when first petal appears
+    if (index === 0) {
+      flowerContainer.style.opacity = 1;
+    }
+    // Continue with next petal after 400ms
+    setTimeout(() => {
+      showPetalsSequentially(index + 1);
+    }, 400);
+  }
+
+  function showChangeText() {
+    changeText.style.opacity = 1;
+    changeText.style.transform = 'translateY(0)';
+  }
+
+  // Start the animation after 2 seconds (show line text fully first)
+  setTimeout(() => {
+    showPetalsSequentially();
+  }, 2000);
+
+</script>
+
+</body>
+</html>
